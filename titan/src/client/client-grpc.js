@@ -1,5 +1,5 @@
-const protoLoader = require('@grpc/proto-loader')
-const grcp = require('grpc')
+const protoLoader = require('../../node_modules2/@grpc/proto-loader')
+const grcp = require('../../node_modules2/grpc')
 
 const packageDefinition = protoLoader.loadSync('./pb/messages.proto', {
     keepCase: true,
