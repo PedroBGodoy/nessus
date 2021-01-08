@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+message User {
+    string id = 1;
+    string email = 2;
+    string name = 3;
+    string password = 4;
+}
+
+message AuthenticationRequest {
+    string token = 1;
+}
+
+message AuthenticationResponse {
+    User user = 1;
+    string error = 2;
+}
+
+service UserService {
+    rpc authenticate(AuthenticationRequest) returns (AuthenticationResponse);
+}

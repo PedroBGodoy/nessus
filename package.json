@@ -1,0 +1,10 @@
+{
+  "name": "nessus",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start:go": "cd europa && go run cmd/europa/main.go",
+    "start:titan:dev": "cd titan && yarn start:dev"
+  }
+}
