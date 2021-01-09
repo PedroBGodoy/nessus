@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 
+	"github.com/nessus/europa/internal/user"
 	"github.com/nessus/europa/pb"
 	"google.golang.org/grpc"
 )
@@ -12,15 +13,26 @@ import (
 type server struct{}
 
 func (*server) Authenticate(ctx context.Context, request *pb.AuthenticationRequest) (*pb.AuthenticationResponse, error) {
-	u := &pb.User{
-		Id:       "1",
-		Email:    "teste@teste.com",
-		Name:     "teste",
-		Password: "",
+	token := request.GetToken()
+
+	u, err := user.Authenticate(token)
+	if err != nil {
+		res := &pb.AuthenticationResponse{
+			User:  nil,
+			Error: err.Error(),
+		}
+
+		return res, nil
+	}
+
+	uPb := &pb.User{
+		Id:    u.UserID,
+		Name:  u.Name,
+		Email: u.Email,
 	}
 
 	res := &pb.AuthenticationResponse{
-		User:  u,
+		User:  uPb,
 		Error: "",
 	}
 

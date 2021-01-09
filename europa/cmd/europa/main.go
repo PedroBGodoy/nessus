@@ -14,7 +14,7 @@ func main() {
 	token, _ := user.LoginUser("teste", "teste")
 	log.Printf("Token: %s", token)
 
-	err := user.Authenticate(token)
+	_, err := user.Authenticate(token)
 	if err != nil {
 		log.Fatalf("User not authenticated: %s", err)
 	}

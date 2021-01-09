@@ -32,11 +32,17 @@ func LoginUser(email string, password string) (string, error) {
 }
 
 // Authenticate validates user token
-func Authenticate(token string) error {
+func Authenticate(token string) (*User, error) {
 	err := validatesToken(token)
 	if err != nil {
-		log.Fatal(err)
-		return err
+		return nil, err
 	}
-	return nil
+
+	u := &User{
+		UserID: "123",
+		Name:   "teste2",
+		Email:  "teste2",
+	}
+
+	return u, nil
 }
