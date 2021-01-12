@@ -1,7 +1,8 @@
-package user
+package models
 
 import (
-	"errors"
+	"fmt"
+	"log"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -31,17 +32,25 @@ func generateToken(email string) (string, error) {
 	return tokenString, err
 }
 
-func validatesToken(token string) error {
-	claims := &Claims{}
+func validatesToken(tokenStr string) (string, error) {
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
 
-	tkn, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
 	if err != nil {
-		return err
+		return "", err
 	}
-	if !tkn.Valid {
-		return errors.New("invalid token")
+
+	email := ""
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		email = claims["email"].(string)
+	} else {
+		log.Printf("Error: %s", err)
 	}
-	return nil
+
+	return email, nil
 }

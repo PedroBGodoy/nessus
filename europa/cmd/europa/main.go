@@ -1,23 +1,32 @@
 package main
 
 import (
+	"context"
 	"log"
 
-	"github.com/nessus/europa/internal/user"
+	"github.com/nessus/europa/internal/models"
+	"github.com/nessus/europa/internal/server/auth"
+	"github.com/nessus/europa/internal/session"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+)
+
+const (
+	port = ":50051"
 )
 
 func main() {
-	// u, _ := user.CreateUser("teste", "teste", "teste")
-
-	// log.Printf("Name: %s, Email: %s, Password: %s", u.Name, u.Email, u.Password)
-
-	token, _ := user.LoginUser("teste", "teste")
-	log.Printf("Token: %s", token)
-
-	_, err := user.Authenticate(token)
+	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("User not authenticated: %s", err)
+		panic("failed to connect database")
 	}
 
-	log.Print("User autenticated!")
+	db.AutoMigrate(&models.User{})
+
+	ctx, err := session.WithDatabase(context.Background(), db)
+	if err != nil {
+		log.Fatalf("error when initalizing context: %s", err)
+	}
+
+	_, err = auth.NewServer(ctx, port)
 }
