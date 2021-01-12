@@ -131,6 +131,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
 # local database
-.db
+*.db
