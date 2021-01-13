@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start:go": "cd europa && go run cmd/europa/main.go",
-    "start:titan:dev": "cd titan && yarn start:dev"
+    "start:europa": "cd europa && go run cmd/europa/main.go",
+    "start:titan:dev": "cd titan && yarn start:dev",
+    "start:titan:mock": "node titan/src"
   }
 }
