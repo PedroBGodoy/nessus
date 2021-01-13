@@ -1,4 +1,4 @@
-package models
+package security
 
 import (
 	"fmt"
@@ -16,7 +16,8 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-func generateToken(email string) (string, error) {
+// GenerateToken generate jwt with email as data
+func GenerateToken(email string) (string, error) {
 	expirationTime := time.Now().Add(5 * time.Minute)
 
 	claims := &Claims{
@@ -32,7 +33,8 @@ func generateToken(email string) (string, error) {
 	return tokenString, err
 }
 
-func validatesToken(tokenStr string) (string, error) {
+// ValidateToken validate jwt and return email
+func ValidateToken(tokenStr string) (string, error) {
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])

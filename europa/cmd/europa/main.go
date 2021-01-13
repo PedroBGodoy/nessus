@@ -1,32 +1,20 @@
 package main
 
 import (
-	"context"
-	"log"
+	"github.com/hashicorp/go-hclog"
 
-	"github.com/nessus/europa/internal/models"
-	"github.com/nessus/europa/internal/server/auth"
-	"github.com/nessus/europa/internal/session"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
+	"github.com/nessus/europa/infra/database"
+	"github.com/nessus/europa/internal/server"
 )
 
 const (
-	port = ":50051"
+	port string = ":50051"
 )
 
 func main() {
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
+	logger := hclog.Default()
 
-	db.AutoMigrate(&models.User{})
+	db := database.InitSQLite(logger)
 
-	ctx, err := session.WithDatabase(context.Background(), db)
-	if err != nil {
-		log.Fatalf("error when initalizing context: %s", err)
-	}
-
-	_, err = auth.NewServer(ctx, port)
+	server.StartgRPCServer(port, db, logger)
 }
