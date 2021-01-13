@@ -1,7 +1,8 @@
 const protoLoader = require('@grpc/proto-loader')
 const grcp = require('grpc')
+const path = require('path')
 
-const packageDefinition = protoLoader.loadSync('./pb/messages.proto', {
+const packageDefinition = protoLoader.loadSync(path.join(__dirname, '../protos/messages.proto'), {
     keepCase: true,
     longs: String,
     enums: String,
